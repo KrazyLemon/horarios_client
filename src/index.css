@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  background-image: repeating-linear-gradient(0deg, #00e2ff, #00e2ff 2px, transparent 2px, transparent);
+  background-size: 32px 32px;
+  background-color: #faffb9;
+  font-family: Quicksand, sans-serif;
+  
+}
+
+*::-webkit-scrollbar {
+  width: 8px;               /* width of the entire scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0);        /* color of the tracking area */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(41, 41, 41);   
+}
+
+
+/* index.css */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
