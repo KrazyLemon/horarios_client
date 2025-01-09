@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import Loading from "../components/Loading"
+import Loading from "../components/Generals/Loading";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import MateriasList from "../components/MateriasList";
+import MateriasList from "../components/Tablas/MateriasList";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function MateriasPage() {
@@ -50,14 +50,14 @@ export default function MateriasPage() {
                             </button>
                         </div>
                     </div>
-                    <div className="flex w-full justify-end">
+                    <div className="flex w-full justify-start">
                         <div className='flex mt-2 bg-white rounded-md shadow-md p-3 space-x-2 '>
                             <MateriasList
                                 materias={materias}
                                 handleSelectedMateria={handleMateriaSelected} />
                         </div>
                     </div>
-                    <h1 className="mt-24"></h1>
+                    <h1 className="mt-28"></h1>
                 </div>
             )}
             <ToastContainer

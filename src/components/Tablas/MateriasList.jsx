@@ -1,13 +1,5 @@
-import { useState } from 'react';
+export default function MateriasList({ materias, materiaSelected ,handleSelectedMateria }) {
 
-export default function MateriasList({ materias, handleSelectedMateria }) {
-
-    const [selectedMateria, setSelectedMateria] = useState(null);
-
-    const handleSelected = (materia) => {
-        setSelectedMateria(materia);
-        handleSelectedMateria(materia);
-    }
     return (
         <div>
             <h1 className="text-xl font-semibold w-full flex justify-center">Materias</h1>
@@ -23,9 +15,9 @@ export default function MateriasList({ materias, handleSelectedMateria }) {
                 <tbody>
                     {materias.map((materia) => (
                         <tr 
-                            className={`cursor-pointer ${selectedMateria === materia ? "bg-amber-300" : ""}`}
+                            className={`cursor-pointer ${materiaSelected === materia ? "bg-amber-300" : ""}`}
                             key={materia.id}
-                            onClick={() => handleSelected(materia)}
+                            onClick={() => handleSelectedMateria(materia)}
                         >
                             <td className="text-sm border px-1 py-1">{materia.nombre}</td>
                             <td className="text-sm border px-1 py-1">{materia.clave}</td>

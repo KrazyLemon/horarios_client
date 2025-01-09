@@ -6,9 +6,10 @@
 body {
   overflow-y: hidden;
   overflow-x: hidden;
-  background-image: repeating-linear-gradient(0deg, #00e2ff, #00e2ff 2px, transparent 2px, transparent);
+  /* background-image: repeating-linear-gradient(0deg, #00e2ff, #00e2ff 2px, transparent 2px, transparent);
   background-size: 32px 32px;
-  background-color: #faffb9;
+  background-color: #faffb9; */
+  background-color: #dad9d9;
   font-family: Quicksand, sans-serif;
   
 }
@@ -22,7 +23,8 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(41, 41, 41);   
+  background-color: rgb(255, 255, 255);   
+  border-radius: 6px;
 }
 
 
@@ -50,4 +52,85 @@ body {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.75);
+}
+
+.spinner {
+   width: 56px;
+   height: 56px;
+   border-radius: 50%;
+   border: 9px solid #1a1a1a;
+   animation: spinner-bulqg1 0.8s infinite linear alternate,
+        spinner-oaa3wk 1.6s infinite linear;
+}
+@keyframes spinner-bulqg1 {
+   0% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
+   }
+
+   12.5% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%);
+   }
+
+   25% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%);
+   }
+
+   50% {
+      clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);
+   }
+
+   62.5% {
+      clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);
+   }
+
+   75% {
+      clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%);
+   }
+
+   100% {
+      clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%);
+   }
+}
+@keyframes spinner-oaa3wk {
+   0% {
+      transform: scaleY(1) rotate(0deg);
+   }
+
+   49.99% {
+      transform: scaleY(1) rotate(135deg);
+   }
+
+   50% {
+      transform: scaleY(-1) rotate(0deg);
+   }
+
+   100% {
+      transform: scaleY(-1) rotate(-135deg);
+   }
+  }
+.dots {
+   width: 13.4px;
+   height: 13.4px;
+   background: #ffffff;
+   color: #ffffff;
+   border-radius: 50%;
+   box-shadow: 22.4px 0,-22.4px 0;
+   animation: dots-u8fzftmd 1s infinite linear alternate;
+}
+
+@keyframes dots-u8fzftmd {
+   0% {
+      box-shadow: 22.4px 0,-22.4px 0;
+      background: ;
+   }
+
+   33% {
+      box-shadow: 22.4px 0,-22.4px 0 rgba(71,75,255,0.13);
+      background: rgba(71,75,255,0.13);
+   }
+
+   66% {
+      box-shadow: 22.4px 0 rgba(71,75,255,0.13),-22.4px 0;
+      background: rgba(71,75,255,0.13);
+   }
 }

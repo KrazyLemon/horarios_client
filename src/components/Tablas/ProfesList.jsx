@@ -11,7 +11,7 @@ export default function ProfesList({ profesores, handleSelectedProfesor }) {
     }
 
     return (
-        <div>
+        <div className=''>
             <h1 className="font-semibold w-full flex justify-center text-xl">Profesores</h1>
             <table className='table-auto w-full'>
                 <thead className="bg-cyan-500 text-white">

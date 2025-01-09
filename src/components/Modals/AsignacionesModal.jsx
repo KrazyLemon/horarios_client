@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import MateriasList from "../components/MateriasList";
-import ProfesList from "../components/ProfesList";
+import MateriasList from "../Tablas/MateriasList";
+import ProfesList from "../Tablas/ProfesList";
 import Modal from 'react-modal';
-import { genHorarios } from "../helper/helper";
+import { genHorarios } from "../../helper/helper";
 
 export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handleGenHorario, horario }) {
 
@@ -19,16 +19,20 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
         const response = await fetch(`${url}materias/semestre/${grupo.semestre}`);
         const data = await response.json();
         setMaterias(data);
-        //console.log(data);
+        if(data.length >0){
+            setMateriaSelected(data[0]);
+            fetchProfesores(data[0].nombre);
+        }
     }
     const fetchProfesores = async () => {
+        if(!materiaSelected) return;
         const response = await fetch(`${url}profesores/materias/${materiaSelected.nombre}`);
         const data = await response.json();
         setProfesores(data);
     }
     const handleSelectedMateria = (materia) => {
         setMateriaSelected(materia);
-        fetchProfesores();
+        fetchProfesores(materia.nombre);
     }
     const handleSelectedProfesor = (profe) => {
         const asignacion = {
@@ -45,6 +49,7 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
                 // Actualiza el arreglo asignacion
                 const updatedAsignaciones = [...prevAsignaciones];
                 updatedAsignaciones[existingAsignacionIndex] = asignacion;
+                
                 return updatedAsignaciones;
             } else {
                 // Añade una nueva asignacion
@@ -54,6 +59,12 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
 
         //console.log(asignaciones);
         verificarAsignaciones();
+
+        const currentIndex = materias.findIndex(materia => materia.nombre === materiaSelected.nombre);
+        const nextIndex = (currentIndex + 1) % materias.length;
+        const nextMateria = materias[nextIndex];
+        setMateriaSelected(nextMateria);
+        fetchProfesores(nextMateria.nombre);
     }
     const verificarAsignaciones = () => {
         setVerificador(() => {
@@ -64,10 +75,10 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
         });
     }
     const handleClick = () => {
-        const dataGen = genHorarios(horario,grupo,asignaciones,);
-        const horarioGenerado = dataGen.horarioGenerado;
+        const dataGen = genHorarios(horario,grupo,asignaciones);
+        const grupoActualizado = dataGen.grupoActualizado;
         const profesActualizados = dataGen.profesActualizados;
-        handleGenHorario(horarioGenerado,profesActualizados);
+        handleGenHorario(grupoActualizado,profesActualizados);
         onRequestClose();
         setAsignaciones([]);
         setVerificador(false);
@@ -77,6 +88,18 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
         setAsignaciones([]);
         setVerificador(false);
     }
+    const filtrarProfesoresPorTurno = (profesores, turnoGrupo) => {
+        return profesores.filter(profesor => {
+            if (!profesor.entrada) {
+                return false;
+            }
+            const horaEntrada = parseInt(profesor.entrada.split(':')[0], 10);
+            const turnoProfesor = horaEntrada >= 14 ? 'V' : 'M';
+            return turnoProfesor === turnoGrupo;
+        });
+    };
+
+    const profesoresFiltrados = profesores ? filtrarProfesoresPorTurno(profesores, grupo.turno) : [];
 
     useEffect(() => {
         if (grupo) {
@@ -84,6 +107,11 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
         }
     }, [grupo]);
 
+    useEffect(()=>{
+        if(materiaSelected){
+            fetchProfesores(materiaSelected.nombre);
+        }
+    },[materiaSelected])
 
     return (
         <Modal
@@ -99,6 +127,7 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
                         {materias && (
                             <MateriasList
                                 materias={materias}
+                                materiaSelected={materiaSelected}
                                 handleSelectedMateria={handleSelectedMateria}
                             />
                         )}
@@ -107,7 +136,7 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
                     <div className='flex w-full flex-col items-top p-3 text-2xl'>
                         {profesores && (
                             <ProfesList
-                                profesores={profesores}
+                                profesores={profesoresFiltrados}
                                 handleSelectedProfesor={handleSelectedProfesor}
                                 materia={materiaSelected}
                             />
