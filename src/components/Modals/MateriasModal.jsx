@@ -12,7 +12,7 @@ export default function MateriasModal({ addmaterias ,isOpen, onRequestClose }) {
     const [materias, setMaterias] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/materias')
+        fetch('http://localhost:8080/materias')
             .then(response => response.json())
             .then(data => {
                 setMaterias(data);

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 import { Icon } from '@iconify/react';
 import { checkhorario, checkSalon, deleteAsignacion, deleteGrupoDeHorario,filterLista, ordenarPorSemestre } from '../helper/helper';
 import ToolTip from '../components/Generals/ToolTip';
@@ -12,19 +13,18 @@ export default function GruposPage() {
     const [isOpen, setIsOpen] = useState(false);
 
     const [loading, setLoading] = useState(true);
-    const url = 'http://localhost:8080/api/v1';
+    const url = 'http://localhost:8080';
     const regex = /^3[1-8]{2}[MV]$/;
 
     const fetchGrupos = async () => {
         try {
             const response = await axios.get(`${url}/grupos`);
-            //console.log(response.data);
             const listaOrdenada = ordenarPorSemestre(response.data);
             setGrupos(listaOrdenada);
             setGruposFiltered(listaOrdenada);
             setLoading(false);
         } catch (error) {
-            console.error(error);
+            console.error('Error details:', error.toJSON());
         }
     }
     const filterGruposByTurno = (turno) => {
@@ -84,18 +84,21 @@ export default function GruposPage() {
                 if (asignacion.objeto === "" || asignacion.objeto === "Teacher") {
                     return null;
                 }
-                const response = await fetch(`${url}/profesores/${asignacion.objeto}`);
+                const response = await fetch(`${url}/profesor/${asignacion.objeto}`);
                 const data = await response.json();
                 return data;
             }));
+            console.log(profes);
+            console.log(filterLista(profes));
             const newProfes = filterLista(profes).map(profe => {
                 profe = deleteGrupoDeHorario(profe, id);
                 return profe;
             });
+            console.log(newProfes);
             await Promise.all(newProfes.map(async profe => {
-                await axios.put(`${url}/profesores/${profe.id}`, profe);
+                //await axios.put(`${url}/profesor/${profe.id}`, profe);
             }));
-            await axios.delete(`${url}/grupos/${id}`);
+            //await axios.delete(`${url}/grupos/${id}`);
             fetchGrupos();
             toast.success('Grupo eliminado con exito');
         } catch (error) {
@@ -107,21 +110,21 @@ export default function GruposPage() {
         const confirmReset = window.confirm(`¿Estas seguro de deshacer los cambios esto eliminara el horario y salon del grupo?`);
         if (!confirmReset) return;
         try {
-            const profes = await Promise.all(grupo.asignaciones.map(async asignacion => {
-                if (asignacion.objeto === "" || asignacion.objeto === "Teacher") {
-                    return null;
-                }
-                const response = await fetch(`${url}/profesores/${asignacion.objeto}`);
-                const data = await response.json();
-                return data;
-            }));
-            const newProfes = filterLista(profes).map(profe => {
-                profe = deleteGrupoDeHorario(profe, id);
-                return profe;
-            });
-            await Promise.all(newProfes.map(async profe => {
-                await axios.put(`${url}/profesores/${profe.id}`, profe);
-            }));
+            // const profes = await Promise.all(grupo.asignaciones.map(async asignacion => {
+            //     if (asignacion.objeto === "" || asignacion.objeto === "Teacher") {
+            //         return null;
+            //     }
+            //     const response = await fetch(`${url}/profesor/${asignacion.objeto}`);
+            //     const data = await response.json();
+            //     return data;
+            // }));
+            // const newProfes = filterLista(profes).map(profe => {
+            //     profe = deleteGrupoDeHorario(profe, id);
+            //     return profe;
+            // });
+            // await Promise.all(newProfes.map(async profe => {
+            //     await axios.put(`${url}/profesor/${profe.id}`, profe);
+            // }));
             grupo.horario = Array(5).fill(Array(8).fill(''));
             grupo.salon = '';
             grupo.asignaciones = Array(1).fill({
@@ -129,7 +132,7 @@ export default function GruposPage() {
                 objeto: "",
                 materia: ""
             });
-            await axios.put(`${url}/grupos/${id}`, grupo);
+            await axios.put(`${url}/grupo/${id}`, grupo);
             fetchGrupos();
             toast.success('Cambios deshechos con exito');
         } catch (error) {

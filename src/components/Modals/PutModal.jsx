@@ -8,7 +8,7 @@ import { revertirMatriz } from '../../helper/helper';
 
 export default function PutModal({ isOpen, onRequestClose, grupo, profesList, materias }) {
 
-    const URL = "http://localhost:8080/api/v1";
+    const URL = "http://localhost:8080/";
     const [loading, setLoading] = useState(true);
     const [salon, setSalon] = useState(null);
 

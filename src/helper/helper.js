@@ -74,13 +74,11 @@ export function ordenarPorSemestre(lista) {
         return semestreA - semestreB;
     });
 }
-
 function ordenarPorHorario(asignaciones) {
     return asignaciones.sort((a, b) => {
         for (let i = 0; i < a.profesor.horario.length; i++) {
             const horarioA = a.profesor.horario[i];
             const horarioB = b.profesor.horario[i];
-
             const horasLibresA = horarioA.filter(hora => hora === "").length;
             const horasLibresB = horarioB.filter(hora => hora === "").length;
 
@@ -91,8 +89,6 @@ function ordenarPorHorario(asignaciones) {
         return 0; // Si todos los días tienen la misma cantidad de horas libres
     });
 }
-
-
 const addProfe = (profe, profesList) => {
     return [...profesList, profe]
 }
@@ -103,6 +99,8 @@ export const genHorarios = (horario, grupo, asignaciones) => {
     let nuevoGrupo = grupo;
     
     const listaOrdenada = ordenarPorHorario(asignaciones);
+
+    console.log(listaOrdenada);
 
     for (const item of listaOrdenada) {
         const profe = item.profesor;
@@ -131,7 +129,7 @@ export const genHorarios = (horario, grupo, asignaciones) => {
                             }
                         } else {
                             if (i == 4) {
-                                if ((hp[i][j] == "") && (horario[i][j] == "")) {
+                                if (hp[i][j] == "" && horario[i][j] == "") {
                                     horario[i][j] = id;
                                     hp[i][j] = id;
                                     horas = horas - 1;

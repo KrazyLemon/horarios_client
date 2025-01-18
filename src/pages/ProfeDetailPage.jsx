@@ -12,7 +12,7 @@ export default function ProfeDetailPage() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
-    const url = `http://localhost:8080/api/v1`;
+    const url = `http://localhost:8080/`;
     const [profe, setProfe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [modalAddMateria, setModalAddMateria] = useState(false);
@@ -20,8 +20,9 @@ export default function ProfeDetailPage() {
     const [materiasHorarios, setMateriasHorarios] = useState([]);
 
     const fecthProfe = async () => {
-        const response = await fetch(`${url}/profesores/${id}`);
+        const response = await fetch(`${url}profesor/${id}`);
         const data = await response.json();
+        console.log(data);
         setProfe({ ...data, horario: revertirMatriz(data.horario) });
         setLoading(false);
     }
@@ -32,7 +33,7 @@ export default function ProfeDetailPage() {
                 if (asignacion.materia == "Tutorias") {
                     return { nombre: "Tutorias", clave: "TUTO-001", horas: "1" };
                 }
-                const response = await fetch(`${url}/materias/${asignacion.materia}`);
+                const response = await fetch(`${url}materia/${asignacion.materia}`);
                 const data = await response.json();
                 return data;
             }));

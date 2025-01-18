@@ -17,7 +17,7 @@ export default function GrupoDetailPage() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
-    const url = `http://localhost:8080/api/v1/`;
+    const url = `http://localhost:8080/`;
     //Listas de Objetos Extraidas del API
     const [grupo, setGrupo] = useState(null);
     const [profesList, setProfesList] = useState(null);
@@ -77,22 +77,7 @@ export default function GrupoDetailPage() {
             setGrupo(newGrupo);
         }
     }
-    const fetchProfes = async () => {
-        if (grupo.asignaciones.length == 1) {
-            setProfesLoading(false);
-            return;
-        }
-        const profes = await Promise.all(grupo.asignaciones.map(async asignacion => {
-            if (asignacion.objeto !== "Teacher" || asignacion.objeto !== "") {
-                //console.log(asignacion.objeto);
-                const response = await fetch(`${url}profesores/${asignacion.objeto}`);
-                const data = await response.json();
-                return data;
-            }
-        }));
-        setProfesList(filterLista(profes));
-        setProfesLoading(false);
-    }
+    
     const handleModal = () => {
         setModalShow(!modalShow);
         setHorarioLoading(!horarioLoading);

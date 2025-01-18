@@ -13,7 +13,7 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
     const [asignaciones, setAsignaciones] = useState([]);
     const [verificador, setVerificador] = useState(false);
 
-    const url = `http://localhost:8080/api/v1/`;
+    const url = `http://localhost:8080/`;
 
     const fetchMaterias = async () => {
         const response = await fetch(`${url}materias/semestre/${grupo.semestre}`);
@@ -26,6 +26,7 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
     }
     const fetchProfesores = async () => {
         if(!materiaSelected) return;
+        //console.log(`${url}profesores/materias/${materiaSelected.nombre}`);
         const response = await fetch(`${url}profesores/materias/${materiaSelected.nombre}`);
         const data = await response.json();
         setProfesores(data);
@@ -35,6 +36,7 @@ export default function AsignacionesModal({ grupo, isOpen, onRequestClose, handl
         fetchProfesores(materia.nombre);
     }
     const handleSelectedProfesor = (profe) => {
+       
         const asignacion = {
             profesor: profe,
             materia: materiaSelected,

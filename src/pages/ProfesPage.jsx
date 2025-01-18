@@ -10,7 +10,8 @@ import NewProfeModal from "../components/Modals/newProfeModal";
 
 export default function ProfesPage() {
 
-    const url = 'http://localhost:8080/api/v1/profesores';
+    const url = 'http://localhost:8080/profesores';
+    const urlPost = 'http://localhost:8080/profesor';
     const [profesores, setProfesores] = useState([]);
     const [filteredProfesores, setFilteredProfesores] = useState([]);
     const [selectedProfesor, setSelectedProfesor] = useState();
@@ -27,6 +28,8 @@ export default function ProfesPage() {
         setLoading(false);
     }
     const handleSelectedProfesor = (profe) => {
+    
+        console.log(profe);
         setSelectedProfesor(profe);
     }
     const handleModal = (materias) => {
@@ -56,7 +59,7 @@ export default function ProfesPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(url, {
+            const response = await fetch(urlPost, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -79,7 +82,7 @@ export default function ProfesPage() {
         const confirm = window.confirm('¿Estás seguro de eliminar el profesor?');
         if (confirm) {
             try {
-                const response = await fetch(`${url}/${id}`, {
+                const response = await fetch(`${urlPost}/${id}`, {
                     method: 'DELETE'
                 });
                 if (response.ok) {
@@ -112,7 +115,7 @@ export default function ProfesPage() {
                 horas: 0
             }
             try {
-                const response = await fetch(`${url}/${id}`, {
+                const response = await fetch(`${urlPost}/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

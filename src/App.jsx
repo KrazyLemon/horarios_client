@@ -1,11 +1,2 @@
 import AppRouter from './AppRouter'
-
-export default function App() {
-  return (
-    <>
-      <AppRouter />
-    </>
-  )
-}
-
-
+export default function App() { return (  <AppRouter/>  ); }
