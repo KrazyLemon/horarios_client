@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState,useContext } from 'react';
-import { GlobalContext } from '../context/GlobalContext';
+import { useEffect, useState, } from 'react';
 import { Icon } from '@iconify/react';
 import { checkhorario, checkSalon, deleteAsignacion, deleteGrupoDeHorario,filterLista, ordenarPorSemestre } from '../helper/helper';
 import ToolTip from '../components/Generals/ToolTip';

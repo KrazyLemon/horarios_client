@@ -9,7 +9,7 @@ export default function MateriasPage() {
     const [loading, setLoading] = useState(true);
     const [materias, setMaterias] = useState([]);
     const [materiasSelected, setMateriaSelected] = useState(null);
-    const url = "http://localhost:8080/api/v1/materias";
+    const url = "http://localhost:8080/materias";
 
     async function fetchData() {
         try {

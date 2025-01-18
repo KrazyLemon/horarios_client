@@ -34,10 +34,6 @@ const NavBar = () => {
             Grupos
           </a>
         </div>
-        <a href="" className="flex items-center  gap-1 hover:bg-blue-200 rounded-md p-3" >
-          Angel Eduardo Velazquez Morales
-          <img src="\avatar.jpeg" alt="user_pic" className="w-10 h-10 rounded-full object-cover object-center" />
-        </a>
       </nav>
       <div className="flex w-full h-screen">
         <Outlet/>
