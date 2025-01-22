@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Loading from "../Generals/Loading";
 
 export default function Horario({ profesor }) {
-    const URL = "http://localhost:8080/api/v1"
+    const URL = "http://localhost:8080"
     const [grupos, setGrupos] = useState(null);
     const [materias, setMaterias] = useState(null);
     const [horario, setHorario] = useState(null);
@@ -11,8 +11,9 @@ export default function Horario({ profesor }) {
     const fetchGrupos = () => {
         const fetchAsignaciones = async () => {
             const resultados = await Promise.all(profesor.asignaciones.map(async (asignacion) => {
+                if (isNaN(asignacion.objeto.charAt(0))) return { grupo: asignacion.objeto, salon: "" };
                 if(asignacion.objeto == null) return ""; 
-                const response = await fetch(`${URL}/grupos/${asignacion.objeto}`);
+                const response = await fetch(`${URL}/grupo/${asignacion.objeto}`);
                 const data  = await response.json();
                 return data;
             }));
@@ -27,7 +28,8 @@ export default function Horario({ profesor }) {
                 if (asignacion.materia == "Tutorias") {
                     return { nombre: "Tutorias", clave: "TUTO-001", horas: "1" };
                 }
-                const response = await fetch(`${URL}/materias/${asignacion.materia}`);
+                if (isNaN(asignacion.materia.charAt(0))) return { nombre: asignacion.materia, horas: "1", clave: "N/A" };
+                const response = await fetch(`${URL}/materia/${asignacion.materia}`);
                 const data = await response.json();
                 return data;
             }));

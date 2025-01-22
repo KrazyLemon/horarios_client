@@ -264,11 +264,11 @@ export default function ProfesPage() {
                                             </li>
                                         ))}
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         {selectedProfesor && selectedProfesor.asignaciones.map((asignacion, index) => (
                                             <h1>{asignacion.id}</h1>
                                         ))}
-                                    </div>
+                                    </div> */}
                                     <div className="flex flex-row-reverse justify-between gap-2">
                                         <a className='flex p-2 bg-purple-500 hover:bg-purple-800 rounded text-white items-center'
                                             href={`/docentes/detail?id=${selectedProfesor.id}`}>

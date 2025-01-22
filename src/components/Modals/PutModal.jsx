@@ -8,7 +8,7 @@ import { revertirMatriz } from '../../helper/helper';
 
 export default function PutModal({ isOpen, onRequestClose, grupo, profesList, materias }) {
 
-    const URL = "http://localhost:8080/";
+    const URL = "http://localhost:8080";
     const [loading, setLoading] = useState(true);
     const [salon, setSalon] = useState(null);
 
@@ -49,7 +49,7 @@ export default function PutModal({ isOpen, onRequestClose, grupo, profesList, ma
             })
         }
         //console.log(salon);
-        const response = await fetch(`${URL}/salones/${salon.id}`, {
+        const response = await fetch(`${URL}/salon/${salon.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export default function PutModal({ isOpen, onRequestClose, grupo, profesList, ma
             ...grupo,
             horario: revertirMatriz(grupo.horario)
         }
-        const response = await fetch(`${URL}/grupos/${grupo.id}`, {
+        const response = await fetch(`${URL}/grupo/${grupo.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export default function PutModal({ isOpen, onRequestClose, grupo, profesList, ma
         return response.json();
     }
     const putProfesor = async (profesor) => {
-        const response = await fetch(`${URL}/profesores/${profesor.id}`, {
+        const response = await fetch(`${URL}/profesor/${profesor.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

@@ -132,6 +132,7 @@ export default function GrupoDetailPage() {
         if (isAssigningIngles) {
             setLoadingIngles(true);
             if (!canAssignIngles()) return;
+            if(grupo.horario[rowIndex][cellIndex] !== "") toast.error("La celda en el horario del grupo ya está ocupada");
             const newHorario = grupo.horario.map((row, rIdx) =>
                 row.map((cell, cIdx) =>
                     (rIdx === rowIndex && cIdx === cellIndex ? ingles.id : cell))
@@ -390,7 +391,7 @@ export default function GrupoDetailPage() {
                                 profesList.map((profe, index) => (
                                     <div key={index} className="w-full h-fit  bg-white rounded-md shadow-md p-3">
                                         <h1 className="flex w-full font-semibold justify-center">Horario del profe {profe.nombre} {profe.apellido}</h1>
-                                        {/* <Horario profesor={profe} /> */}
+                                        <Horario profesor={profe} />
                                     </div>
                                 ))
                             )

@@ -46,7 +46,7 @@ export default function HorarioClassic({ objeto, materias, onCellClick, handleMo
         if (!objeto || !materias) return '';
         const asignacion = objeto.asignaciones.find(asignacion => asignacion.id === id);
         if (!asignacion) return '';
-        if (asignacion.materia === "Tutorias" || asignacion.materia === "Inglés") {
+        if (asignacion.materia === "Tutorias" || asignacion.materia === "Inglés" || isNaN(asignacion.materia.charAt(0))) {
             return asignacion.materia;
         }
         const materia = materias.find(materia => materia.id === asignacion.materia);

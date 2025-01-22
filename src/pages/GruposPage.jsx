@@ -146,9 +146,11 @@ export default function GruposPage() {
         <>
             {loading ? <div className="spinner"></div> : (
                 <div className='flex flex-col w-full  h-screen mx-2 overflow-y-auto '>
-                    <div className='flex w-full  items-center mt-2 bg-white rounded-md shadow-md p-3 space-x-2 '>
-                        <Icon icon="fluent:people-20-regular" width="40px" height="40px" className='rounded-full bg-cyan-400 p-1 text-white ' />
-                        <h1 className="font-semibold text-2xl">Grupos</h1>
+                    <div className='flex justify-between w-full  items-center mt-2 bg-white rounded-md shadow-md p-3 space-x-2 '>
+                        <h1 className="flex items-center gap-2 font-semibold text-2xl">
+                            <Icon icon="fluent:people-20-regular" width="40px" height="40px" className='rounded-full bg-cyan-400 p-1 text-white ' />
+                            Grupos
+                        </h1>
                     </div>
                     <div className='items-center h-fit mt-2 '>
                         <div className='flex bg-white rounded-md shadow-md p-3 justify-between items-center'>
