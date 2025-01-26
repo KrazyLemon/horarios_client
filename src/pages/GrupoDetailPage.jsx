@@ -12,6 +12,7 @@ import MateriasList from "../components/Tablas/MateriasList";
 import SalonesSelect from "../components/Tablas/SalonesSelect";
 import TutoModal from "../components/Modals/TutoModal";
 import PutModal from "../components/Modals/PutModal";
+import { genRow, genXls, transformDataWithProfesor } from "../helper/genxls";
 
 export default function GrupoDetailPage() {
     const location = useLocation();
@@ -23,6 +24,7 @@ export default function GrupoDetailPage() {
     const [profesList, setProfesList] = useState(null);
     const [salones, setSalones] = useState(null);
     const [materias, setMaterias] = useState(null);
+    const [mph, setMph] = useState(null);
     const [ingles, setIngles] = useState(null);
     const [salon, setSalon] = useState(null);
     //Booleans Para Controlar los Loadings 
@@ -37,7 +39,6 @@ export default function GrupoDetailPage() {
     const [modalTutoShow, setModalTutoShow] = useState(false);
     const [modalConfirmShow, setModalConfirmShow] = useState(false);
     const [isAssigningIngles, setIsAssigningIngles] = useState(true);
-
 
     const fetchgrupo = async () => {
         const response = await fetch(`${url}grupos/grupo/${id}`);
@@ -56,6 +57,39 @@ export default function GrupoDetailPage() {
         setMaterias(data);
         setMateriasLoading(false);
     }
+    const fetchProfes = () => {
+        const fetchAsignaciones = async () => {
+            const resultados = await Promise.all(grupo.asignaciones.map(async (asignacion) => {
+                //if (asignacion.objeto == "*") return { profe: asignacion.objeto};
+                if (asignacion.objeto == "Teacher") return { nombre: "Teacher", apellido: "", id: "Teacher" };
+                if (asignacion.objeto == null) return "";
+                const response = await fetch(`${url}profesor/${asignacion.objeto}`);
+                const data = await response.json();
+                return data;
+            }));
+            setProfesList(resultados);
+            setProfesLoading(false);
+        };
+        fetchAsignaciones().catch(error => console.error('Error fetching profes:', error));
+    }
+    const fetchMateriasFromAsignaciones = () => {
+        const fetchAsignaciones = async () => {
+            const resultados = await Promise.all(grupo.asignaciones.map(async (asignacion) => {
+                if (asignacion.objeto == null) return "";
+                if (asignacion.materia == "Tutorias") {
+                    return { nombre: "Tutorias", clave: "TUTO-001", horas: "1" };
+                }
+
+                if (isNaN(asignacion.materia.charAt(0))) return { nombre: asignacion.materia, horas: "1", clave: "N/A" };
+                const response = await fetch(`${url}materia/${asignacion.materia}`);
+                const data = await response.json();
+                return data;
+            }));
+            setMph(resultados);
+        };
+        fetchAsignaciones().catch(error => console.error('Error fetching Materias:', error));
+    }
+
     const fetchSalones = async () => {
         const result = await fetch(`${url}salones`);
         const data = await result.json();
@@ -77,7 +111,6 @@ export default function GrupoDetailPage() {
             setGrupo(newGrupo);
         }
     }
-    
     const handleModal = () => {
         setModalShow(!modalShow);
         setHorarioLoading(!horarioLoading);
@@ -132,7 +165,7 @@ export default function GrupoDetailPage() {
         if (isAssigningIngles) {
             setLoadingIngles(true);
             if (!canAssignIngles()) return;
-            if(grupo.horario[rowIndex][cellIndex] !== "") toast.error("La celda en el horario del grupo ya está ocupada");
+            if (grupo.horario[rowIndex][cellIndex] !== "") toast.error("La celda en el horario del grupo ya está ocupada");
             const newHorario = grupo.horario.map((row, rIdx) =>
                 row.map((cell, cIdx) =>
                     (rIdx === rowIndex && cIdx === cellIndex ? ingles.id : cell))
@@ -244,6 +277,14 @@ export default function GrupoDetailPage() {
         setModalConfirmShow(!modalConfirmShow);
     }
 
+    const handleGenXl = () => {
+        const confirm = window.confirm('¿Desea exportar el horario a un archivo de Excel?');
+        if (!confirm) return;
+        const data = genRow(grupo, profesList, mph);
+        
+        genXls(transformDataWithProfesor(data), `${grupo.grupo}.xlsx`, `horario-${grupo.grupo}`);
+    }
+
     useEffect(() => {
         fetchgrupo();
     }, [id]);
@@ -255,6 +296,10 @@ export default function GrupoDetailPage() {
                 fetchSalones();
                 if (grupo.semestre <= 5) {
                     fecthIngles();
+                }
+                if (grupo.asignaciones.length >= 1) {
+                    fetchMateriasFromAsignaciones();
+                    fetchProfes();
                 }
                 setHorarioLoading(false);
             }
@@ -274,7 +319,7 @@ export default function GrupoDetailPage() {
                             <h1 className='flex items-center text-4xl font-semibold'>Horario de Grupo {grupo.grupo}</h1>
                         </div>
                     </div>
-                    <div className="flex  space-x-2"> {/* Contenedor de Acciones y Horario */}
+                    <div className="flex  space-x-2"> {/* Contenedor de datos del grupo*/}
                         <div className="flex flex-col justify-between  space-y-2 bg-white rounded-md shadow-md p-3">
                             <div className="space-y-2" >
                                 <h1 className="flex w-full justify-center font-semibold">Información del grupo</h1>
@@ -360,6 +405,21 @@ export default function GrupoDetailPage() {
                                     </ToolTip>
                                 </div>
                                 <div className="space-x-2">
+                                    {checkhorario(grupo.horario) === "Horario Vacio" ? (
+                                        <ToolTip tooltip="Exportar Horario">
+                                            <a className="flex items-center cursor-pointer gap-2 rounded bg-gray-500 text-white p-2"  >
+                                                <Icon icon="teenyicons:ms-excel-outline" width="30" height="30" />
+                                                Exportar Csv
+                                            </a>
+                                        </ToolTip>
+                                    ) : (
+                                        <ToolTip tooltip="Exportar Horario">
+                                            <a className="flex items-center cursor-pointer gap-2 rounded bg-emerald-500 text-white p-2" onClick={handleGenXl} >
+                                                <Icon icon="teenyicons:ms-excel-outline" width="30" height="30" />
+                                                Exportar Csv
+                                            </a>
+                                        </ToolTip>
+                                    )}
                                     <ToolTip tooltip="Guardar Cambios">
                                         <a className="flex items-center cursor-pointer  rounded bg-green-500 text-white p-2" onClick={handlePutModal} >
                                             <Icon icon="fluent:save-20-regular" width="30" height="30" />
@@ -386,12 +446,12 @@ export default function GrupoDetailPage() {
                         </div>
                     </div>
                     <div className='gap space-y-2'>
+                        <h1>Lista de Profesores</h1>
                         {profesList && (
                             profesLoading ? <div className="flex w-full h-fit items-center justify-center"><Loading /></div> : (
                                 profesList.map((profe, index) => (
                                     <div key={index} className="w-full h-fit  bg-white rounded-md shadow-md p-3">
-                                        <h1 className="flex w-full font-semibold justify-center">Horario del profe {profe.nombre} {profe.apellido}</h1>
-                                        <Horario profesor={profe} />
+                                        <h1>{profe.nombre} {profe.apellido}</h1>
                                     </div>
                                 ))
                             )

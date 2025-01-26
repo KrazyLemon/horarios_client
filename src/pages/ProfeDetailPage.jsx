@@ -7,6 +7,8 @@ import { filterLista, genId, revertirMatriz, transponerMatriz } from "../helper/
 import { ToastContainer, toast } from 'react-toastify';
 import HorarioClassic from "../components/Horarios/HorarioClassic";
 import Modal from "react-modal";
+import Horario from "../components/Horarios/Horario";
+import { genXls, transformData } from "../helper/genxls";
 
 
 export default function ProfeDetailPage() {
@@ -22,6 +24,7 @@ export default function ProfeDetailPage() {
     const [materiasHorarios, setMateriasHorarios] = useState([]);
     const [extras, setExtras] = useState([]);
     const [materiaSelected, setMateriaSelected] = useState(null);
+    const [data, setData] = useState(null);
 
     const fecthProfe = async () => {
         const response = await fetch(`${url}profesor/${id}`);
@@ -106,7 +109,7 @@ export default function ProfeDetailPage() {
             materia: materia,
             objeto: grupo
         }
-        
+
         setProfe({
             ...profe,
             horas: profe.horas + parseInt(horas),
@@ -147,9 +150,20 @@ export default function ProfeDetailPage() {
         }
     }
 
+    const handleGenXl = () => {
+        //console.log(data);
+        const confirm = window.confirm('¿Desea exportar el horario a un archivo de Excel?');
+        if (!confirm) return;
+        genXls(transformData(data), `${profe.nombre}-${profe.apellido}.xlsx`, `${profe.nombre}-${profe.apellido}`);
+    }
+
+    const getHorario = (horario) => {
+        setData(horario);
+    }
+
     useEffect(() => {
         fecthProfe();
-        console.log(profe);
+        //console.log(profe);
     }, []);
 
     useEffect(() => {
@@ -160,7 +174,7 @@ export default function ProfeDetailPage() {
 
     return (
         <>{loading ? <div className="flex w-full h-screen items-center justify-center"><Loading /></div> :
-            <div className="flex flex-col w-full h-screen overflow-y-auto pb-10 space-x-2 space-y-2 pt-2  pe-2">
+            <div className="flex flex-col w-full h-screen overflow-y-auto pb-10 space-x-2 space-y-2 pt-2 pe-2">
                 <div className='flex items-center space-x-2 ms-2'>
                     <a className="bg-white rounded-md shadow-md p-3 hover:bg-cyan-400 hover:text-white "
                         onClick={() => window.history.back()}>
@@ -291,15 +305,22 @@ export default function ProfeDetailPage() {
                                 <Icon icon="fluent:save-20-regular" width="30" height="30" />
                                 Guardar cambios
                             </button>
-                            <a className='flex p-2 bg-blue-500 hover:bg-blue-800 rounded text-white items-center' >
-                                    <Icon icon="fluent:print-20-regular" width="30" height="30" />
-                                    Imprimir horario
-                                </a>
-                           
                         </div>
-                        <HorarioClassic objeto={profe} materias={materiasHorarios} onCellClick={handleClickHorario} />
+                        <HorarioClassic objeto={profe} materias={materiasHorarios} onCellClick={handleClickHorario} mode={"view"} />
                     </div>
                 </div>
+                <div className="bg-white p-3 rounded-md shadow-md flex flex-col"> {/* Horario del profesor */}
+                    <div className="flex justify-between items-center">
+                        <h1 className="font-semibold text-2xl ">Horario</h1>
+                        <a className='flex p-2 gap-2 bg-emerald-500 hover:bg-emerald-800 rounded text-white items-center' 
+                            onClick={handleGenXl} >
+                            <Icon icon="teenyicons:ms-excel-outline" width="30" height="30" />
+                            Exportar CSV
+                        </a>
+                    </div>
+                    <Horario profesor={profe} handleGetHorario={getHorario} />
+                </div>
+
                 <Modal
                     isOpen={modalExtras}
                     onRequestClose={() => setModalExtras(false)}

@@ -100,7 +100,7 @@ export const genHorarios = (horario, grupo, asignaciones) => {
     
     const listaOrdenada = ordenarPorHorario(asignaciones);
 
-    console.log(listaOrdenada);
+    //console.log(listaOrdenada);
 
     for (const item of listaOrdenada) {
         const profe = item.profesor;
