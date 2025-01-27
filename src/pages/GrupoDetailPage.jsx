@@ -13,6 +13,7 @@ import SalonesSelect from "../components/Tablas/SalonesSelect";
 import TutoModal from "../components/Modals/TutoModal";
 import PutModal from "../components/Modals/PutModal";
 import { genRow, genXls, transformDataWithProfesor } from "../helper/genxls";
+import { use } from "react";
 
 export default function GrupoDetailPage() {
     const location = useLocation();
@@ -67,6 +68,7 @@ export default function GrupoDetailPage() {
                 const data = await response.json();
                 return data;
             }));
+            console.log(resultados);
             setProfesList(resultados);
             setProfesLoading(false);
         };
@@ -89,7 +91,6 @@ export default function GrupoDetailPage() {
         };
         fetchAsignaciones().catch(error => console.error('Error fetching Materias:', error));
     }
-
     const fetchSalones = async () => {
         const result = await fetch(`${url}salones`);
         const data = await result.json();
@@ -119,8 +120,8 @@ export default function GrupoDetailPage() {
     const handleGenHorario = (grupo, profes) => {
         setGrupo(grupo);
         setProfesList(profes);
-        setHorarioLoading(!horarioLoading);
-        setProfesLoading(!profesLoading);
+        setHorarioLoading(false);
+        setProfesLoading(false);
         toast.success('Horario generado exitosamente');
     }
     const handleTutoModal = () => {
@@ -235,7 +236,9 @@ export default function GrupoDetailPage() {
                 ? { ...profesor, horario: revertirMatriz(nuevoHorarioProfe) }
                 : profesor
         );
+        //console.log(nuevoProfesList);
         setGrupo({ ...grupo, horario: nuevoHorarioGrupo });
+        //console.log(nuevoHorarioGrupo);
         setProfesList(nuevoProfesList);
         setHorarioLoading(false);
         toast.success("La asignación se realizó con éxito");
@@ -281,7 +284,7 @@ export default function GrupoDetailPage() {
         const confirm = window.confirm('¿Desea exportar el horario a un archivo de Excel?');
         if (!confirm) return;
         const data = genRow(grupo, profesList, mph);
-        
+
         genXls(transformDataWithProfesor(data), `${grupo.grupo}.xlsx`, `horario-${grupo.grupo}`);
     }
 
@@ -292,19 +295,23 @@ export default function GrupoDetailPage() {
     useEffect(() => {
         setTimeout(() => {
             if (grupo) {
+                console.log(grupo);
                 fetchMaterias();
                 fetchSalones();
                 if (grupo.semestre <= 5) {
                     fecthIngles();
                 }
-                if (grupo.asignaciones.length >= 1) {
-                    fetchMateriasFromAsignaciones();
-                    fetchProfes();
-                }
                 setHorarioLoading(false);
             }
         }, 1000);
     }, [grupo]);
+
+    useEffect(() => {
+        if (grupo && grupo.asignaciones.length >= 1) {
+            fetchMateriasFromAsignaciones();
+            fetchProfes();
+        }
+    }, []);
 
     return (
         <>

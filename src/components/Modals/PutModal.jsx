@@ -21,7 +21,7 @@ export default function PutModal({ isOpen, onRequestClose, grupo, profesList, ma
             const data = await response.json();
             setSalon(data);
         } catch (error) {
-            //console.error('Failed to fetch salon:', error);
+            console.error('Failed to fetch salon:', error);
             //toast.error('Failed to fetch salon');
         }
     };
