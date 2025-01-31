@@ -34,6 +34,8 @@ La Plataforma Generadora de Horarios es una aplicación web diseñada para gesti
     ```
 4. Ya esta todo listo para empezar a usar el programa
 
+Nota. Para la ejecucion de este programa debe tener instalado y ejecutando el API al igual que la base de datos 
+
 ## Autor
 
     Angel Eduardo Velazquez Morales
