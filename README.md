@@ -25,7 +25,7 @@ La Plataforma Generadora de Horarios es una aplicación web diseñada para gesti
 
 2. Clone el repositorio:
    ```sh
-   git clone https://github.com/tu-usuario/plataforma-generadora-de-horarios.git
+    git clone https://github.com/KrazyLemon/horarios_client.git
    ```
 3. ejecute los siguientes comandos para su ejecucion
     ```sh
