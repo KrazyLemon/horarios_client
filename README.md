@@ -33,3 +33,7 @@ La Plataforma Generadora de Horarios es una aplicación web diseñada para gesti
         npm run dev
     ```
 4. Ya esta todo listo para empezar a usar el programa
+
+## Autor
+
+    Angel Eduardo Velazquez Morales
